@@ -1,0 +1,8 @@
+Członkowie grupy 1:
+(1) Maksmylian Lach, 302868
+(2) Maciej Morgalla, 302884
+(3) Marcin Mitura, 302882
+
+Kierownik grupy: Maksymilian Lach
+
+URL repozytorium: https://github.com/Hooterr/NetSim
