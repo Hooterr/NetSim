@@ -1,9 +1,15 @@
-//
-// Created by lsriw on 12/17/19.
-//
-
 #ifndef SRC_PACKAGE_HPP
-//TATATA
 #define SRC_PACKAGE_HPP
 
+#include <stdlib.h>
+
+class Package{
+public:
+    Package()
+    Package(Package&&){}
+    Package operator=(Package&&){}
+    ElementID get_id(){return id_}
+private:
+    ElementID id_;
+};
 #endif //SRC_PACKAGE_HPP
