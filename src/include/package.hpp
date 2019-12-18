@@ -3,6 +3,8 @@
 
 #include <stdlib.h>
 
+using ElementID;
+
 class Package{
 public:
     Package()
@@ -12,4 +14,5 @@ public:
 private:
     ElementID id_;
 };
+
 #endif //SRC_PACKAGE_HPP
