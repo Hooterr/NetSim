@@ -10,6 +10,6 @@
 class ElementID{
 public:
     Element ID(){}
-}:
+};
 
 #endif //SRC_TYPES_HPP
