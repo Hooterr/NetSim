@@ -6,10 +6,7 @@
 #define SRC_TYPES_HPP
 
 
+using ElementID = int;
 
-class ElementID{
-public:
-    Element ID(){}
-}:
 
 #endif //SRC_TYPES_HPP
