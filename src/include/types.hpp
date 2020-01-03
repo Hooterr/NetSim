@@ -8,5 +8,8 @@
 
 using ElementID = int;
 
+using Time = double;
+using TimeOffset = double;
+using ProbabilityGeneretor = double;
 
 #endif //SRC_TYPES_HPP
