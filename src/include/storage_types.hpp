@@ -16,7 +16,7 @@ enum class PackageQueueType{
 
 class IPackageStockpile{
 public:
-    virtual void push(Package& package)=0;
+    virtual void push(Package&& package)=0;
     virtual bool empty() const=0;
     virtual std::size_t size() const=0;
 };
@@ -32,6 +32,7 @@ private:
     std::list<Package> items;
     PackageQueueType queue_type;
 public:
+    using const_iter = std::list<Package>::const_iterator;
     std::size_t size() const  {
         return items.size();
     }
@@ -40,13 +41,14 @@ public:
         return items.empty();
     }
 
-    void push(Package &package)  {
-        items.push_back(package);
+    void push(Package &&package)  {
+        items.emplace_back(std::move(package));
     }
 
     PackageQueueType get_queue_type() const {
         return queue_type;
     }
+
     Package& pop();
 
     using iterator = std::list<Package>::const_iterator;
