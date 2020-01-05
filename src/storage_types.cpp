@@ -7,7 +7,9 @@
 Package& PackageQueue::pop() {
     switch(queue_type) {
         case PackageQueueType::FIFO: {
+            // TODO jak usunac element z listy bez niszczenia jesgo instancji?
             Package& item = items.front();
+            // pop_front, pop_back, erease, remove usuwaja instancje
             items.pop_front();
             return item;
         }

@@ -1,9 +1,9 @@
 #include <iostream>
-#include "include/storage_types.hpp"
+#include "nodes.hpp"
 
-
-
+using namespace std;
 int main() {
+    /*
     IPackageQueue* ptr;
     IPackageStockpile* ptr2;
     PackageQueue test(PackageQueueType::FIFO);
@@ -26,7 +26,19 @@ int main() {
     std::cout << pp1.get_id() << std::endl;
     std::cout << pppp.get_id() << std::endl;
 
-    std::cout << ptr2->size() << std::endl;
+    std::cout << ptr2->size() << std::endl;*/
+
+    IPackageQueue* ptr;
+    PackageQueue test(PackageQueueType::FIFO);
+    ptr = &test;
+    Worker w1(1, 100, std::make_unique<PackageQueue>(PackageQueueType::FIFO));
+    Worker w2(3, 100, std::make_unique<PackageQueue>(PackageQueueType::FIFO));
+    Ramp r1(2, 100);
+    r1.receiver_preferences.add_receiver(&w1);
+    r1.receiver_preferences.add_receiver(&w2);
+    r1.deliver_goods(100);
+    r1.send_package();
+    w1.do_work(200);
     return 0;
 
 }
