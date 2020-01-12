@@ -11,6 +11,6 @@ using ElementID = int;
 
 using Time = double;
 using TimeOffset = double;
-using ProbabilityGeneretor = std::function<double(void)>;
+using ProbabilityGenerator = std::function<double(void)>;
 
 #endif //SRC_TYPES_HPP

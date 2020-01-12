@@ -16,7 +16,7 @@ void Worker::do_work(Time time) {
     else
     {
         if (pq_->empty() == false) {
-            Package &package = pq_->pop();
+            Package package = pq_->pop();
             push_package(std::move(package));
             start_time = time;
         }
@@ -28,7 +28,7 @@ void Worker::receive_package(Package &&p) {
 }
 
 void Ramp::deliver_goods(Time t) {
-    if(abs(start_time - t) >= di_)
+    if(start_time == -1 || (abs(start_time - t) >= di_))
     {
         push_package(Package());
         start_time = t;
@@ -37,13 +37,14 @@ void Ramp::deliver_goods(Time t) {
 
 void PackageSender::send_package() {
     if (buffer_) {
-        auto receiver = receiver_preferences.choose_receiver();
+        auto receiver = receiver_preferences_.choose_receiver();
         receiver->receive_package(std::move(buffer_.value()));
+        buffer_.reset();
     }
 }
 
-std::optional<Package> PackageSender::get_sending_buffer() {
-    return std::move(buffer_);
+std::optional<Package>& PackageSender::get_sending_buffer() {
+    return buffer_;
 }
 
 void PackageSender::push_package(Package &&package) {

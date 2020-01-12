@@ -5,20 +5,17 @@
 #ifndef SRC_HELPERS_HPP
 #define SRC_HELPERS_HPP
 
-#include <cstdlib>
-#include <iostream>
+
+#include <functional>
 #include <random>
-#include <ctime>
 
-class Random {
-public:
-    static double probability_generator() {
+#include "types.hpp"
 
-        /* initialize random seed: */
-        srand (time(NULL));
+extern std::random_device rd;
+extern std::mt19937 rng;
 
+extern double default_probability_generator();
 
-        return ((double) rand() / (RAND_MAX));
-    }
-};
+extern ProbabilityGenerator probability_generator;
+
 #endif //SRC_HELPERS_HPP

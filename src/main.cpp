@@ -34,8 +34,8 @@ int main() {
     Worker w1(1, 100, std::make_unique<PackageQueue>(PackageQueueType::FIFO));
     Worker w2(3, 100, std::make_unique<PackageQueue>(PackageQueueType::FIFO));
     Ramp r1(2, 100);
-    r1.receiver_preferences.add_receiver(&w1);
-    r1.receiver_preferences.add_receiver(&w2);
+    r1.receiver_preferences_.add_receiver(&w1);
+    r1.receiver_preferences_.add_receiver(&w2);
     r1.deliver_goods(100);
     r1.send_package();
     w1.do_work(200);

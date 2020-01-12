@@ -4,19 +4,19 @@
 #include "include/storage_types.hpp"
 #include <stdexcept>
 
-Package& PackageQueue::pop() {
+Package PackageQueue::pop() {
     switch(queue_type) {
         case PackageQueueType::FIFO: {
             // TODO jak usunac element z listy bez niszczenia jesgo instancji?
             Package& item = items.front();
             // pop_front, pop_back, erease, remove usuwaja instancje
             items.pop_front();
-            return item;
+            return std::move(item);
         }
         case PackageQueueType::LIFO: {
             Package& item = items.back();
             items.pop_back();
-            return item;
+            return std::move(item);
         }
         default:
             throw std::invalid_argument("Queue type not implemented!");
