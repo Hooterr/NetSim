@@ -1,12 +1,9 @@
-#include <utility>
-
-//
-// Created by root on 1/3/2020.
-//
+//Maksymilian Lach, 302868
 
 #ifndef SRC_NODES_HPP
 #define SRC_NODES_HPP
 
+#include <utility>
 #include <memory>
 #include <optional>
 #include <functional>

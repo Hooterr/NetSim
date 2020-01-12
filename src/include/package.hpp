@@ -1,3 +1,4 @@
+//Maksymilian Lach, 302868
 #ifndef PACKAGE_HPP
 #define PACKAGE_HPP
 

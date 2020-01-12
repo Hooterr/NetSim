@@ -1,3 +1,4 @@
+//Maksymilian Lach, 302868
 #include <iostream>
 #include "nodes.hpp"
 
