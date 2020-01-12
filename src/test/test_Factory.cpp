@@ -128,8 +128,8 @@ TEST(FactoryTest, RemoveWorkerTwoRemainingReceivers) {
 
     auto prefs = r.receiver_preferences_.get_preferences();
     ASSERT_EQ(prefs.size(), 2U);
-
-    auto it = prefs.find(&(*(factory.find_worker_by_id(2))));
+    auto&& a = *factory.find_worker_by_id(2);
+    auto it = prefs.find(&((a)));
     ASSERT_NE(it, prefs.end());
     EXPECT_DOUBLE_EQ(it->second, 1.0 / 2.0);
 

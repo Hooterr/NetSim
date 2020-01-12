@@ -11,32 +11,23 @@ set (SOURCE_FILES
         storage_types.cpp
         include/nodes.hpp
         include/helpers.hpp
+        factory.cpp
+        include/factory.hpp
         nodes.cpp
         helpers.cpp)
 
-add_executable(src main.cpp ${SOURCE_FILES} )
-target_compile_definitions(src PUBLIC EXERCISE_ID=EXERCISE_ID_NODES)
+add_executable(src main.cpp ${SOURCE_FILES})
+target_compile_definitions(src PUBLIC EXERCISE_ID=EXERCISE_ID_FACTORY)
 
 set(SOURCES_FILES_TESTS
         test/config.hpp
         test/global_functions_mock.hpp
         test/main_gtest.cpp
-        test/test_package.cpp
-        test/test_storage_types.cpp
-        test/test_nodes.cpp
-        test/nodes_mocks.hpp
+        test/test_Nodecollection.cpp
+        test/test_Factory.cpp
         )
 
-set(SOURCES_FILES_TESTS2
-        test/config.hpp
-        test/global_functions_mock.hpp
-        test/main_gtest.cpp
-        test/test_nodes.cpp
-        test/nodes_mocks.hpp
-        )
-
-
-add_executable(netsim__test ${SOURCE_FILES} ${SOURCES_FILES_TESTS2} test/main_gtest.cpp)
+add_executable(netsim__test ${SOURCE_FILES} ${SOURCES_FILES_TESTS} test/main_gtest.cpp)
 
 target_include_directories(netsim__test PUBLIC
         ../../googletest-master/googlemock/include

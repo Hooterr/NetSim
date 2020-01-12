@@ -53,22 +53,22 @@ void PackageSender::push_package(Package &&package) {
 }
 
 void ReceiverPreferences::add_receiver(IPackageReceiver *receiver) {
-    receivers_.insert(std::pair<IPackageReceiver*, double>(receiver, 0));
+    preferences_.insert(std::pair<IPackageReceiver*, double>(receiver, 0));
     rescale_probabilities();
 }
 
 void ReceiverPreferences::remove_receiver(IPackageReceiver *receiver) {
-    receivers_.erase(receiver);
+    preferences_.erase(receiver);
     rescale_probabilities();
 }
 
 void ReceiverPreferences::rescale_probabilities() {
-    std::size_t num_of_el = receivers_.size();
+    std::size_t num_of_el = preferences_.size();
 
     if (num_of_el == 0)
         return;
 
-    for(auto &item : receivers_) {
+    for(auto &item : preferences_) {
         item.second = (double)1 / num_of_el;
     }
 }
@@ -76,7 +76,7 @@ void ReceiverPreferences::rescale_probabilities() {
 IPackageReceiver* ReceiverPreferences::choose_receiver() {
     const double random = pg_();
         double sum = 0;
-    for(auto &pair : receivers_)
+    for(auto &pair : preferences_)
     {
         sum += pair.second;
         if (random <= sum) {

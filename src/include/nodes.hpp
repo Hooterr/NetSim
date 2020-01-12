@@ -12,12 +12,20 @@
 #include "package.hpp"
 #include "storage_types.hpp"
 
+enum ReceiverType
+{
+    WORKER,
+    STOREHOUSE,
+};
+
 
 class IPackageReceiver
 {
 public:
     virtual void receive_package(Package &&p) = 0;
     virtual ElementID get_id() const = 0;
+    virtual ReceiverType get_receiver_type() const = 0;
+    virtual ~IPackageReceiver() = default;
 };
 
 class Storehouse : public IPackageReceiver{
@@ -28,6 +36,7 @@ public:
     }
     void receive_package(Package &&p) override { sp_->push(std::move(p)); }
     ElementID get_id() const override { return id_; }
+    ReceiverType get_receiver_type() const override { return ReceiverType ::STOREHOUSE; }
 
 private:
     ElementID id_;
@@ -36,15 +45,19 @@ private:
 
 class ReceiverPreferences {
 public:
+    using preferences_t = std::map<IPackageReceiver*, double>;
+    using const_iterator = preferences_t::const_iterator;
+
     explicit ReceiverPreferences(ProbabilityGenerator pg) : pg_(pg) {}
     ReceiverPreferences() : pg_ (default_probability_generator) {}
     void add_receiver(IPackageReceiver* receiver);
     void remove_receiver(IPackageReceiver* receiver);
     IPackageReceiver* choose_receiver();
-    const std::map<IPackageReceiver*, double>& get_preferences() const { return receivers_; }
+    const std::map<IPackageReceiver*, double>& get_preferences() const { return preferences_; }
+    void set_preferences(preferences_t& prefs) { preferences_ = prefs; }
 private:
     ProbabilityGenerator pg_;
-    std::map<IPackageReceiver*, double> receivers_;
+    std::map<IPackageReceiver*, double> preferences_;
     void rescale_probabilities();
 };
 
@@ -61,7 +74,7 @@ private:
     std::optional<Package> buffer_;
 };
 
-class Ramp : public PackageSender{
+class Ramp : public PackageSender {
 public:
 #define FIRST_ROUND -1
     Ramp(ElementID id, TimeOffset di) : id_(id), di_(di), start_time(FIRST_ROUND) {}
@@ -85,7 +98,7 @@ public:
     Time get_package_processing_start_time() const { return start_time; }
     void receive_package(Package &&p) override;
     ElementID get_id() const override { return id_;}
-
+    ReceiverType get_receiver_type() const override{ return ReceiverType::WORKER; }
 private:
     ElementID id_;
     TimeOffset pd_;

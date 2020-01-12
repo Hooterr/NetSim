@@ -1,6 +1,7 @@
 //Maksymilian Lach, 302868
 #include <iostream>
 #include "nodes.hpp"
+#include "factory.hpp"
 
 using namespace std;
 int main() {
@@ -40,6 +41,9 @@ int main() {
     r1.deliver_goods(100);
     r1.send_package();
     w1.do_work(200);
+    
+    NodeCollection<Ramp> nc;
+    nc.add(r1);
     return 0;
 
 }
