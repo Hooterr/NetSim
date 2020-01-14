@@ -151,4 +151,8 @@ private:
     }
 };
 
+Factory load_factory_structure(std::istream &is);
+void save_factory_structure(Factory& factory, std::ostream &os);
+
+
 #endif //SRC_FACTORY_HPP
