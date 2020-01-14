@@ -15,7 +15,9 @@ set (SOURCE_FILES
         factory.cpp
         include/factory.hpp
         nodes.cpp
-        helpers.cpp)
+        helpers.cpp
+        simulation.cpp
+        include/simulation.hpp reports.cpp include/reports.hpp)
 
 add_executable(src main.cpp ${SOURCE_FILES})
 target_compile_definitions(src PUBLIC EXERCISE_ID=EXERCISE_ID_FACTORY)
