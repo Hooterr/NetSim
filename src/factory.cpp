@@ -23,7 +23,7 @@ bool Factory::is_consistent() const {
         try{
             can_reach_storehouse(dynamic_cast<const PackageSender*>(&(*it)), colors);
         }
-        catch (std::logic_error)
+        catch (const std::logic_error&)
         {
             return false;
         }
