@@ -37,7 +37,8 @@ public:
     void receive_package(Package &&p) override { sp_->push(std::move(p)); }
     ElementID get_id() const override { return id_; }
     ReceiverType get_receiver_type() const override { return ReceiverType ::STOREHOUSE; }
-
+    IPackageQueue::const_iterator cbegin() const { return sp_->cbegin(); }
+    IPackageQueue::const_iterator cend() const { return sp_->cend(); }
 private:
     ElementID id_;
     std::unique_ptr<IPackageStockpile> sp_;
@@ -99,6 +100,11 @@ public:
     void receive_package(Package &&p) override;
     ElementID get_id() const override { return id_;}
     ReceiverType get_receiver_type() const override{ return ReceiverType::WORKER; }
+    IPackageQueue* get_queue() const { return pq_.get(); }
+    IPackageStockpile::const_iterator cbegin() const { return pq_->cbegin(); }
+    IPackageStockpile::const_iterator cend() const { return pq_->cend(); }
+    const std::optional<Package>& get_processing_buffer() const { return buffer_; }
+    Time get_time_spent(Time t) const { return t - start_time; }
 private:
     ElementID id_;
     TimeOffset pd_;

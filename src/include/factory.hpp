@@ -11,11 +11,22 @@
 
 #include <stdlib.h>
 #include <vector>
+#include <istream>
+#include <string>
 
 enum COLOR {
     NOT_VISITED,
     VISITED,
     VERIFIED,
+};
+
+
+enum class ElementType
+{
+    RAMP,
+    WORKER,
+    STOREHOUSE,
+    LINK
 };
 
 template <typename Node>
