@@ -30,6 +30,7 @@ int main() {
 
     std::cout << ptr2->size() << std::endl;*/
 
+    /*
     IPackageQueue* ptr;
     PackageQueue test(PackageQueueType::FIFO);
     ptr = &test;
@@ -44,6 +45,6 @@ int main() {
     
     NodeCollection<Ramp> nc;
     nc.add(r1);
+     */
     return 0;
-
 }

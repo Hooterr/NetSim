@@ -77,7 +77,7 @@ private:
 class Ramp : public PackageSender {
 public:
 #define FIRST_ROUND -1
-    Ramp(ElementID id, TimeOffset di) : id_(id), di_(di), start_time(FIRST_ROUND) {}
+    Ramp(ElementID id, TimeOffset di) : di_(di), id_(id), start_time(FIRST_ROUND) {}
     void deliver_goods(Time t);
     TimeOffset get_delivery_interval() const { return di_; }
     ElementID get_id() const { return id_; }
