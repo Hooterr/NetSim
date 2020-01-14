@@ -28,7 +28,7 @@ set(SOURCES_FILES_TESTS
         test/main_gtest.cpp
         test/test_Nodecollection.cpp
         test/test_Factory.cpp
-        )
+        test/test_reports.cpp)
 
 add_executable(netsim__test ${SOURCE_FILES} ${SOURCES_FILES_TESTS} test/main_gtest.cpp)
 
