@@ -7,6 +7,25 @@
 
 #include <string>
 #include <functional>
+#include <set>
 
+#include "storage_types.hpp"
+
+class IntervalReportNotifier {
+public:
+    IntervalReportNotifier(TimeOffset _time_offset) : _time_offset(_time_offset) {}
+    bool should_generate_report(Time t) { return t == _time_offset; }
+private:
+    TimeOffset _time_offset;
+};
+
+class SpecificTurnsReportNotifier {
+public:
+    SpecificTurnsReportNotifier(std::set<Time> turns) : _turns(turns) {}
+    bool should_generate_report(Time t) { return _turns.find(t) != _turns.end(); }
+
+private:
+    std::set<Time> _turns;
+};
 
 #endif //SRC_REPORTS_HPP
