@@ -2,51 +2,12 @@
 #include <iostream>
 #include "nodes.hpp"
 #include "factory.hpp"
+#include "reports.hpp"
 #include <sstream>
 
-using namespace std;
-int main() {
-    /*
-    IPackageQueue* ptr;
-    IPackageStockpile* ptr2;
-    PackageQueue test(PackageQueueType::FIFO);
-    ptr = &test;
-    ptr2 = &test;
-    std::cout << (ptr->get_queue_type() == PackageQueueType::FIFO ? "ok" : "fuck") << std::endl;
 
-    std::cout << "Hello, World!" << std::endl;
-
-    Package *p1;
-    Package pp1;
-    p1 = & pp1;
-    std::cout << p1->get_id() << std::endl;
-
-    ptr->push(std::move(pp1));
-    std::cout << "queue size:" << ptr2->size() << std::endl;
-    std::cout << (ptr->empty() == 0 ? "not empty" : "empty") << std::endl;
-    Package& pppp = ptr->pop();
-    std::cout << p1->get_id() << std::endl;
-    std::cout << pp1.get_id() << std::endl;
-    std::cout << pppp.get_id() << std::endl;
-
-    std::cout << ptr2->size() << std::endl;*/
-
-    /*
-    IPackageQueue* ptr;
-    PackageQueue test(PackageQueueType::FIFO);
-    ptr = &test;
-    Worker w1(1, 100, std::make_unique<PackageQueue>(PackageQueueType::FIFO));
-    Worker w2(3, 100, std::make_unique<PackageQueue>(PackageQueueType::FIFO));
-    Ramp r1(2, 100);
-    r1.receiver_preferences_.add_receiver(&w1);
-    r1.receiver_preferences_.add_receiver(&w2);
-    r1.deliver_goods(100);
-    r1.send_package();
-    w1.do_work(200);
-    
-    NodeCollection<Ramp> nc;
-    nc.add(r1);
-     */
+void test ()
+{
     std::string r1 = "LOADING_RAMP id=1 delivery-interval=3";
     std::string r2 = "LOADING_RAMP id=2 delivery-interval=2";
     std::string w1 = "WORKER id=1 processing-time=2 queue-type=FIFO";
@@ -110,6 +71,43 @@ int main() {
     }
 
     std::ostringstream oss;
-    save_factory_structure(factory, std::cout);
+    factory.do_deliveries(1);
+    factory.do_package_passing();
+    factory.do_work(1);
+    generate_simulation_turn_report(factory, std::cout, 1);
+
+    factory.do_deliveries(2);
+    factory.do_package_passing();
+    factory.do_work(2);
+    generate_simulation_turn_report(factory, std::cout, 2);
+
+    factory.do_deliveries(3);
+    factory.do_package_passing();
+    factory.do_work(3);
+    generate_simulation_turn_report(factory, std::cout, 3);
+
+    factory.do_deliveries(4);
+    factory.do_package_passing();
+    factory.do_work(4);
+    generate_simulation_turn_report(factory, std::cout, 4);
+
+    factory.do_deliveries(5);
+    factory.do_package_passing();
+    factory.do_work(5);
+    //generate_simulation_turn_report(factory, std::cout, 5);
+
+    factory.do_deliveries(6);
+    factory.do_package_passing();
+    factory.do_work(6);
+    generate_simulation_turn_report(factory, std::cout, 6);
+
+
+}
+using namespace std;
+int main() {
+
+    test();
+
+
     return 0;
 }

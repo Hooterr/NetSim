@@ -4,21 +4,24 @@
 //
 
 #include <nodes.hpp>
+#include <iostream>
 
 void Worker::do_work(Time time) {
     if (buffer_)
     {
-        if (abs(time - start_time) >= pd_)
+        if (abs(time - start_time) + 1 >= pd_)
         {
             // We're done with this package
             push_package(std::move(buffer_.value()));
+            // Remember to clear the working buffer
+            buffer_.reset();
         }
     }
     else
     {
         if (pq_->empty() == false) {
             Package package = pq_->pop();
-            push_package(std::move(package));
+            buffer_.emplace(std::move(package));
             start_time = time;
         }
     }
@@ -26,6 +29,7 @@ void Worker::do_work(Time time) {
 
 void Worker::receive_package(Package &&p) {
     pq_->push(std::move(p));
+
 }
 
 void Ramp::deliver_goods(Time t) {
@@ -42,10 +46,6 @@ void PackageSender::send_package() {
         receiver->receive_package(std::move(buffer_.value()));
         buffer_.reset();
     }
-}
-
-std::optional<Package>& PackageSender::get_sending_buffer() {
-    return buffer_;
 }
 
 void PackageSender::push_package(Package &&package) {

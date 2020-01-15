@@ -8,16 +8,15 @@
 Package PackageQueue::pop() {
     switch(queue_type) {
         case PackageQueueType::FIFO: {
-            // TODO jak usunac element z listy bez niszczenia jesgo instancji?
-            Package& item = items.front();
+            Package item = std::move(items.front());
             // pop_front, pop_back, erease, remove usuwaja instancje
             items.pop_front();
-            return std::move(item);
+            return item;
         }
         case PackageQueueType::LIFO: {
-            Package& item = items.back();
+            Package item = std::move(items.back());
             items.pop_back();
-            return std::move(item);
+            return item;
         }
         default:
             throw std::invalid_argument("Queue type not implemented!");

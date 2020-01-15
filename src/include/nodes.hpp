@@ -54,11 +54,12 @@ public:
     void add_receiver(IPackageReceiver* receiver);
     void remove_receiver(IPackageReceiver* receiver);
     IPackageReceiver* choose_receiver();
-    const std::map<IPackageReceiver*, double>& get_preferences() const { return preferences_; }
+    const preferences_t& get_preferences() const { return preferences_; }
     void set_preferences(preferences_t& prefs) { preferences_ = prefs; }
+
 private:
     ProbabilityGenerator pg_;
-    std::map<IPackageReceiver*, double> preferences_;
+    preferences_t preferences_;
     void rescale_probabilities();
 };
 
@@ -67,7 +68,8 @@ public:
     PackageSender() : receiver_preferences_(default_probability_generator){}
     ReceiverPreferences receiver_preferences_;
     void send_package();
-    std::optional<Package>& get_sending_buffer();
+    const std::optional<Package>& get_sending_buffer() const { return buffer_; }
+    PackageSender(PackageSender&&) = default;
 protected:
     void push_package(Package && package);
 
@@ -104,7 +106,8 @@ public:
     IPackageStockpile::const_iterator cbegin() const { return pq_->cbegin(); }
     IPackageStockpile::const_iterator cend() const { return pq_->cend(); }
     const std::optional<Package>& get_processing_buffer() const { return buffer_; }
-    Time get_time_spent(Time t) const { return t - start_time; }
+    TimeOffset get_time_spent(Time t) const { return t - start_time + 1; }
+
 private:
     ElementID id_;
     TimeOffset pd_;

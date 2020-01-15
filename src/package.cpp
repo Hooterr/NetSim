@@ -2,6 +2,7 @@
 #include "package.hpp"
 
 #include <stdexcept>
+#include <iostream>
 
 void insert_if_not_exists(std::set<ElementID>& s, ElementID e) {
     if (s.find(e) == s.end()) {
@@ -68,6 +69,7 @@ Package& Package::operator=(Package&& other) noexcept {
 
 Package::~Package() {
     if (id_ != BLANK_ID) {
+        std::cout << "Deleting " << id_ << std::endl;
         insert_if_not_exists(freed_ids_, id_);
         erase_if_exists(assigned_ids_, id_);
     }

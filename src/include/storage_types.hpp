@@ -62,6 +62,7 @@ public:
 
     explicit PackageQueue(PackageQueueType queueType) : queue_type(queueType){}
 
+    ~PackageQueue()= default;
 };
 
 #endif //SRC_STORAGE_TYPES_HPP

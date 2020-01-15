@@ -4,7 +4,7 @@
 
 #include "reports.hpp"
 
-void generate_structure_report(Factory &factory, std::ostream &os){
+void generate_structure_report(const Factory &factory, std::ostream &os){
 
     os << "\n== LOADING RAMPS ==\n\n";
     std::for_each(factory.ramp_cbegin(), factory.ramp_cend(), [&os](const Ramp& ramp){
@@ -18,13 +18,13 @@ void generate_structure_report(Factory &factory, std::ostream &os){
         os << "\n";
     });
 
-    os << "\n== WORKERS ==\n";
+    os << "\n== WORKERS ==\n\n";
     std::for_each(factory.worker_cbegin(), factory.worker_cend(), [&os](const Worker& worker) {
         os << "WORKER #" << worker.get_id() << "\n";
-        os << " Processing time: " << worker.get_processing_duration() << "\n";
+        os << "  Processing time: " << worker.get_processing_duration() << "\n";
         // TODO enum to string or something..
-        os << " Queue type: " << (worker.get_queue()->get_queue_type() == PackageQueueType::FIFO ? "FIFO" : "LIFO") << "\n";
-        os << " Receivers:\n";
+        os << "  Queue type: " << (worker.get_queue()->get_queue_type() == PackageQueueType::FIFO ? "FIFO" : "LIFO") << "\n";
+        os << "  Receivers:\n";
 
         auto prefs = worker.receiver_preferences_.get_preferences();
         std::for_each(prefs.cbegin(), prefs.cend(), [&os](const std::pair<IPackageReceiver*,double> pair) {
@@ -34,9 +34,9 @@ void generate_structure_report(Factory &factory, std::ostream &os){
         os << "\n";
     });
 
-    os << "\n== STOREHOUSES ==\n\n";
+    os << "\n== STOREHOUSES ==\n";
     std::for_each(factory.storehouse_cbegin(), factory.storehouse_cend(), [&os](const Storehouse& storehouse) {
-        os << "STOREHOUSE #" << storehouse.get_id() << "\n";
+        os << "\nSTOREHOUSE #" << storehouse.get_id() << "\n";
     });
     os << "\n";
 }
@@ -44,39 +44,58 @@ void generate_structure_report(Factory &factory, std::ostream &os){
 
 
 
-void generate_simulation_turn_report(Factory &factory, std::ostream &os, Time t)
+void generate_simulation_turn_report(const Factory &factory, std::ostream &os, Time t)
 {
-    os << "\n== WORKERS ==\n";
-    std::for_each(factory.worker_cbegin(), factory.worker_cend(), [&os, t](const Worker& worker) {
-        os << "WORKERS #" << worker.get_id() << "\n";
-        os << " Queue: \n";
+    os << "=== [ Turn: " << std::to_string(t) <<" ] ===\n";
+    os << "\n== WORKERS ==\n\n";
+    for (auto it = factory.worker_cbegin(); it != factory.worker_cend(); it++) {
+        const Worker& worker = *it;
+        os << "WORKER #" << worker.get_id() << "\n";
+        os << "  PBuffer: ";
+        if(worker.get_processing_buffer())
+            os << "#" + std::to_string(worker.get_processing_buffer().value().get_id())
+               <<(" (pt = ") << std::to_string((int)worker.get_time_spent(t)) << ")";
+        else
+            os << "(empty)";
+
+        os << "\n  Queue: ";
 
         auto queue = worker.get_queue();
+
+        if (queue->cbegin() == queue->cend())
+            os << "(empty)";
+
         for (auto package = queue->cbegin(); package != queue->cend(); package++)
         {
-
             os << "#" << package->get_id();
-            if (&(worker.get_processing_buffer().value()) == &(*package))
+            if (worker.get_processing_buffer() && &(worker.get_processing_buffer().value()) == &(*package))
                 os << " (pt = " << worker.get_time_spent(t) << ")";
 
-           os << (package++ != queue->cend() ? "," : "");
+           os << (package == std::prev(queue->cend()) ? "" : ",");
         }
 
         os << "\n";
-    });
+
+        os << "  SBuffer: " << (worker.get_sending_buffer() ? "#" + std::to_string(worker.get_sending_buffer().value().get_id()) : "(empty)")
+           << "\n\n";
+    }
 
     os << "\n== STOREHOUSES ==\n\n";
 
-    std::for_each(factory.storehouse_cbegin(), factory.storehouse_cend(), [&os, t](const Storehouse& store) {
+    for (auto it = factory.storehouse_cbegin(); it != factory.storehouse_cend(); it++) {
+        const Storehouse& store = *it;
         os << "STOREHOUSE #" << store.get_id() << "\n";
-        os << " Queue: \n";
+        os << "  Stock: ";
+
+        if (store.cbegin() == store.cend())
+            os << "(empty)";
 
         for (auto package = store.cbegin(); package != store.cend(); package++)
         {
             os << "#" << package->get_id();
-            os << (package++ != store.cend() ? "," : "");
+            os << (package == std::prev(store.cend()) ? "" : ",");
         }
 
-        os << "\n";
-    });
+        os << "\n\n";
+    }
 }
