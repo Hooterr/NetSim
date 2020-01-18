@@ -8,6 +8,7 @@
 #include <optional>
 #include <functional>
 #include <map>
+#include "config.hpp"
 #include "helpers.hpp"
 #include "package.hpp"
 #include "storage_types.hpp"
@@ -22,7 +23,9 @@ class IPackageReceiver {
 public:
     virtual ElementID get_id() const = 0;
     virtual void receive_package(Package &&p) = 0;
+#if (defined EXERCISE_ID && EXERCISE_ID != EXERCISE_ID_NODES)
     virtual ReceiverType get_receiver_type() const = 0;
+#endif
     virtual ~IPackageReceiver() = default;
 };
 
@@ -35,7 +38,9 @@ public:
     }
     void receive_package(Package &&p) override { sp_->push(std::move(p)); }
     ElementID get_id() const override { return id_; }
+#if (defined EXERCISE_ID && EXERCISE_ID != EXERCISE_ID_NODES)
     ReceiverType get_receiver_type() const override { return ReceiverType ::STOREHOUSE; }
+#endif
     IPackageQueue::const_iterator cbegin() const { return sp_->cbegin(); }
     IPackageQueue::const_iterator cend() const { return sp_->cend(); }
 private:
@@ -103,7 +108,9 @@ public:
     Time get_package_processing_start_time() const { return start_time; }
     void receive_package(Package &&p) override;
     ElementID get_id() const override { return id_;}
-    ReceiverType get_receiver_type() const override{ return ReceiverType::WORKER; }
+#if (defined EXERCISE_ID && EXERCISE_ID != EXERCISE_ID_NODES)
+    ReceiverType get_receiver_type() const override { return ReceiverType ::WORKER; }
+#endif
     IPackageQueue* get_queue() const { return pq_.get(); }
     IPackageStockpile::const_iterator cbegin() const { return pq_->cbegin(); }
     IPackageStockpile::const_iterator cend() const { return pq_->cend(); }
