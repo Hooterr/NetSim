@@ -9,7 +9,6 @@ Package PackageQueue::pop() {
     switch(queue_type) {
         case PackageQueueType::FIFO: {
             Package item = std::move(items.front());
-            // pop_front, pop_back, erease, remove usuwaja instancje
             items.pop_front();
             return item;
         }
@@ -20,7 +19,5 @@ Package PackageQueue::pop() {
         }
         default:
             throw std::invalid_argument("Queue type not implemented!");
-
     }
 }
-

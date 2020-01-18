@@ -12,25 +12,24 @@
 #include "package.hpp"
 #include "storage_types.hpp"
 
-enum ReceiverType
-{
+// Types of nodes that are able to receive a package
+enum ReceiverType {
     WORKER,
     STOREHOUSE,
 };
 
-
-class IPackageReceiver
-{
+class IPackageReceiver {
 public:
-    virtual void receive_package(Package &&p) = 0;
     virtual ElementID get_id() const = 0;
+    virtual void receive_package(Package &&p) = 0;
     virtual ReceiverType get_receiver_type() const = 0;
     virtual ~IPackageReceiver() = default;
 };
 
+
 class Storehouse : public IPackageReceiver{
 public:
-    Storehouse(ElementID id, std::unique_ptr<IPackageStockpile> d = std::make_unique<PackageQueue>(PackageQueueType::LIFO))
+    explicit Storehouse(ElementID id, std::unique_ptr<IPackageStockpile> d = std::make_unique<PackageQueue>(PackageQueueType::LIFO))
             : id_(id){
         sp_ = std::move(d);
     }
@@ -53,8 +52,10 @@ public:
     ReceiverPreferences() : pg_ (default_probability_generator) {}
     void add_receiver(IPackageReceiver* receiver);
     void remove_receiver(IPackageReceiver* receiver);
-    IPackageReceiver* choose_receiver();
+    IPackageReceiver* choose_receiver() const;
     const preferences_t& get_preferences() const { return preferences_; }
+
+    // For testing
     void set_preferences(preferences_t& prefs) { preferences_ = prefs; }
 
 private:
@@ -65,11 +66,12 @@ private:
 
 class PackageSender {
 public:
-    PackageSender() : receiver_preferences_(default_probability_generator){}
     ReceiverPreferences receiver_preferences_;
+    PackageSender() : receiver_preferences_(default_probability_generator){}
     void send_package();
     const std::optional<Package>& get_sending_buffer() const { return buffer_; }
     PackageSender(PackageSender&&) = default;
+
 protected:
     void push_package(Package && package);
 

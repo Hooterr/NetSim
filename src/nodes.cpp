@@ -73,7 +73,7 @@ void ReceiverPreferences::rescale_probabilities() {
     }
 }
 
-IPackageReceiver* ReceiverPreferences::choose_receiver() {
+IPackageReceiver* ReceiverPreferences::choose_receiver() const {
     const double random = pg_();
         double sum = 0;
     for(auto &pair : preferences_)

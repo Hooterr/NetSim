@@ -36,8 +36,7 @@ public:
     using iterator = typename container_t::iterator;
     using const_iterator = typename container_t::const_iterator;
 
-    // MUST IMPLEMENT GENERIC CLASS HERE BECAUSE C++ IS TOO STUPID TO READ
-    // THE IMPLEMENTATION FROM A SOURCE FILE XDDDDDDDDDDDDDDDDDDDDDDDDDD
+
     void add(Node& node){
         _container.push_back(std::move(node));
     }

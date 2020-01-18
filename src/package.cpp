@@ -18,11 +18,8 @@ void erase_if_exists(std::set<ElementID>& s, ElementID e) {
 
 Package::Package() {
     if (freed_ids_.empty()) {
-        // Przypisz najmniejszy dotychczas nieużyty identyfikator.
         id_ = (*assigned_ids_.rbegin()) + 1;
     } else {
-        // Metoda set::extract() nie jest dostępna we wszystkich implementacjach kompilatora C++.
-//            id_ = freed_ids_.extract(freed_ids_.begin());
         id_ = *freed_ids_.begin();
         freed_ids_.erase(id_);
     }
@@ -45,16 +42,6 @@ Package::Package(Package&& other) noexcept {
 }
 
 Package& Package::operator=(Package&& other) noexcept {
-    /*
-     * Przypisanie odbywa się do już istniejącego obiektu, zatem należy zadbać,
-     * aby przydzielone temu obiektowi ID wróciło do puli dostępnych ID.
-     * W przeciwnym razie m.in. każda operacja typu
-     *   Product p0;
-     *   Product p = p0;
-     * prowadziłaby do "wycieku identyfikatorów" - gdyż po jej wykonaniu ID p0
-     * wynosiłoby BLANK_ID, p otrzymałoby dotychczasowy ID p0, natomiast
-     * dotychczasowy ID p pozostałby w puli przydzielonych ID.
-     */
     if (id_ != BLANK_ID) {
         freed_ids_.insert(id_);
         assigned_ids_.erase(id_);
@@ -69,7 +56,6 @@ Package& Package::operator=(Package&& other) noexcept {
 
 Package::~Package() {
     if (id_ != BLANK_ID) {
-        std::cout << "Deleting " << id_ << std::endl;
         insert_if_not_exists(freed_ids_, id_);
         erase_if_exists(assigned_ids_, id_);
     }
