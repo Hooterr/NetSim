@@ -3,6 +3,8 @@
 //
 
 #include "reports.hpp"
+#include <sstream>
+#include <map>
 
 void generate_structure_report(const Factory &factory, std::ostream &os){
 
@@ -18,8 +20,10 @@ void generate_structure_report(const Factory &factory, std::ostream &os){
         os << "\n";
     });
 
+    std::map<ElementID, std::string> workers, stores;
+
     os << "\n== WORKERS ==\n\n";
-    std::for_each(factory.worker_cbegin(), factory.worker_cend(), [&os](const Worker& worker) {
+    std::for_each(factory.worker_cbegin(), factory.worker_cend(), [&os, &workers, &stores](const Worker& worker) {
         os << "WORKER #" << worker.get_id() << "\n";
         os << "  Processing time: " << worker.get_processing_duration() << "\n";
         // TODO enum to string or something..
@@ -27,22 +31,36 @@ void generate_structure_report(const Factory &factory, std::ostream &os){
         os << "  Receivers:\n";
 
         auto prefs = worker.receiver_preferences_.get_preferences();
-        std::for_each(prefs.cbegin(), prefs.cend(), [&os](const std::pair<IPackageReceiver*,double> pair) {
-            os << "    " << (pair.first->get_receiver_type() == ReceiverType::WORKER ? "worker" : "storehouse");
-            os << " #" << pair.first->get_id()<< "\n";
+        std::for_each(prefs.cbegin(), prefs.cend(), [&workers, &stores](const std::pair<IPackageReceiver*,double> pair) {
+            std::stringstream ss;
+            ss << "    " << (pair.first->get_receiver_type() == ReceiverType::WORKER ? "worker" : "storehouse");
+            ss << " #" << pair.first->get_id()<< "\n";
+
+            if (pair.first->get_receiver_type() == ReceiverType::WORKER)
+                workers.insert(std::pair<ElementID , std::string>(pair.first->get_id(), ss.str()));
+            else
+                stores.insert(std::pair<ElementID , std::string>(pair.first->get_id(), ss.str()));
         });
-        os << "\n";
+
     });
 
+    std::for_each(workers.cbegin(), workers.cend(), [&os](const auto &pair) { os << pair.second; });
+    std::for_each(stores.cbegin(), stores.cend(), [&os](const auto &pair) { os << pair.second; });
+
+    os << "\n";
+
+    std::map<ElementID, std::string> strs;
     os << "\n== STOREHOUSES ==\n";
-    std::for_each(factory.storehouse_cbegin(), factory.storehouse_cend(), [&os](const Storehouse& storehouse) {
-        os << "\nSTOREHOUSE #" << storehouse.get_id() << "\n";
+    std::for_each(factory.storehouse_cbegin(), factory.storehouse_cend(), [&strs](const Storehouse& storehouse) {
+        std::stringstream ss;
+        ss << "\nSTOREHOUSE #" << storehouse.get_id() << "\n";
+        strs.insert(std::pair<ElementID, std::string>(storehouse.get_id(), ss.str()));
     });
+
+    std::for_each(strs.cbegin(), strs.cend(), [&os](const auto &pair) { os << pair.second; });
+
     os << "\n";
 }
-
-
-
 
 void generate_simulation_turn_report(const Factory &factory, std::ostream &os, Time t)
 {
