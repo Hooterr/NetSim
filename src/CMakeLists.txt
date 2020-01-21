@@ -4,26 +4,27 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS " -std=c++14 -Wall -Wextra -Werror -Wpedantic -pedantic-errors ")
 include_directories(include)
 include_directories(test)
+include_directories(src)
 add_subdirectory(Google_tests)
 set (SOURCE_FILES
         include/package.hpp
         include/types.hpp
         include/storage_types.hpp
-        package.cpp
-        storage_types.cpp
         include/nodes.hpp
         include/helpers.hpp
-        factory.cpp
-        include/factory.hpp
-        nodes.cpp
-        helpers.cpp
-        simulation.cpp
         include/simulation.hpp
-        reports.cpp
-        include/reports.hpp)
+        include/factory.hpp
+        include/reports.hpp
+        src/factory.cpp
+        src/storage_types.cpp
+        src/package.cpp
+        src/nodes.cpp
+        src/helpers.cpp
+        src/simulation.cpp
+        src/reports.cpp)
 
-add_executable(src main.cpp ${SOURCE_FILES})
-target_compile_definitions(src PUBLIC EXERCISE_ID=SIMULATION)
+add_executable(netsim main.cpp ${SOURCE_FILES})
+target_compile_definitions(netsim PUBLIC EXERCISE_ID=SIMULATION)
 
 set(SOURCES_FILES_TESTS
         test/config.hpp

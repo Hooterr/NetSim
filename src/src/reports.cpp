@@ -42,12 +42,15 @@ void generate_structure_report(const Factory &factory, std::ostream &os){
                 stores.insert(std::pair<ElementID , std::string>(pair.first->get_id(), ss.str()));
         });
 
+        std::for_each(stores.cbegin(), stores.cend(), [&os](const auto &pair) { os << pair.second; });
+        std::for_each(workers.cbegin(), workers.cend(), [&os](const auto &pair) { os << pair.second; });
+
+        stores.clear();
+        workers.clear();
+
+        os << "\n";
+
     });
-
-    std::for_each(workers.cbegin(), workers.cend(), [&os](const auto &pair) { os << pair.second; });
-    std::for_each(stores.cbegin(), stores.cend(), [&os](const auto &pair) { os << pair.second; });
-
-    os << "\n";
 
     std::map<ElementID, std::string> strs;
     os << "\n== STOREHOUSES ==\n";
